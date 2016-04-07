@@ -84,7 +84,7 @@ playingPlayer Players{..} =
 
 updatePlayerTurn :: Players -> Players
 updatePlayerTurn pl@Players{..} =
-  let playerNames = (Map.keys plPlayers) 
+  let playerNames = Map.keys plPlayers
   in pl {plPlayerTurn = (head . filter(/= plPlayerTurn)) playerNames}
 
 isGameOver :: Board -> Bool
@@ -112,7 +112,7 @@ gameLoop gc@GameComponents{..} = do
   showPlayerTurn
   moveRes <- placePiece <$> readPiece <*> readPiecePos <*> pure gc
   case moveRes of
-    Left err -> (putStrLn $ show err) >> putChar '\n' >> gameLoop gc
+    Left err -> print err >> putChar '\n' >> gameLoop gc
     Right ugc@(GameComponents updatedBoard updatedPlayers) -> do
       putChar '\n'
       if isGameOver updatedBoard
@@ -368,7 +368,7 @@ numOfCreatedSequences board@Board{..} (rowNo, colNo) =
    toLeft lOffset arr = if lOffset >= 0 then Just(arr `at` lOffset) else Nothing
    rightCol = toRight (colNo + 1) 
    nextRightCol = toRight (colNo + 2)
-   toRight rOffset arr = if rOffset < (fst bDimensions)
+   toRight rOffset arr = if rOffset < fst bDimensions
                           then Just(arr `at` rOffset)
                           else Nothing
  
